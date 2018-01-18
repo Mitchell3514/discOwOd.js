@@ -69,8 +69,8 @@ class Channel extends Base {
    * @example
    * // Delete the channel
    * channel.delete()
-   *   then(console.log)
-   *   .catch(console.error);
+   *   .then() // Success
+   *   .catch(console.error); // Log error
    */
   delete() {
     return this.client.api.channels(this.id).delete().then(() => this);
