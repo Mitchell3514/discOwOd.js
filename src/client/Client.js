@@ -15,7 +15,7 @@ const UserStore = require('../stores/UserStore');
 const ChannelStore = require('../stores/ChannelStore');
 const GuildStore = require('../stores/GuildStore');
 const ClientPresenceStore = require('../stores/ClientPresenceStore');
-const GuildEmojiStore = require('../stores/GuildEmojiStore');
+const EmojiStore = require('../stores/EmojiStore');
 const { Events, browser } = require('../util/Constants');
 const DataResolver = require('../util/DataResolver');
 const { Error, TypeError, RangeError } = require('../errors');
@@ -208,11 +208,11 @@ class Client extends BaseClient {
 
   /**
    * All custom emojis that the client has access to, mapped by their IDs
-   * @type {GuildEmojiStore<Snowflake, GuildEmoji>}
+   * @type {EmojiStore<Snowflake, Emoji>}
    * @readonly
    */
   get emojis() {
-    const emojis = new GuildEmojiStore({ client: this });
+    const emojis = new EmojiStore({ client: this });
     for (const guild of this.guilds.values()) {
       if (guild.available) for (const emoji of guild.emojis.values()) emojis.set(emoji.id, emoji);
     }

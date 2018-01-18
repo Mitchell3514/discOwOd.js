@@ -10,10 +10,10 @@ class GuildEmojiUpdateAction extends Action {
 }
 
 /**
- * Emitted whenever a custom emoji is updated in a guild.
+ * Emitted whenever a custom guild emoji is updated.
  * @event Client#emojiUpdate
- * @param {GuildEmoji} oldEmoji The old emoji
- * @param {GuildEmoji} newEmoji The new emoji
+ * @param {Emoji} oldEmoji The old emoji
+ * @param {Emoji} newEmoji The new emoji
  */
 
 module.exports = GuildEmojiUpdateAction;
