@@ -52,12 +52,12 @@ class ReactionCollector extends Collector {
       this.client.removeListener(Events.MESSAGE_REACTION_REMOVE_ALL, this.empty);
     });
 
-    this.on('collect', (reaction, user) => {
+    this.on('collect', (collected, reaction, user) => {
       this.total++;
       this.users.set(user.id, user);
     });
 
-    this.on('remove', (reaction, user) => {
+    this.on('dispose', (disposed, reaction, user) => {
       this.total--;
       if (!this.collected.some(r => r.users.has(user.id))) this.users.delete(user.id);
     });
@@ -66,33 +66,23 @@ class ReactionCollector extends Collector {
   /**
    * Handles an incoming reaction for possible collection.
    * @param {MessageReaction} reaction The reaction to possibly collect
-   * @returns {?Snowflake|string}
+   * @returns {?{key: Snowflake, value: MessageReaction}}
    * @private
    */
   collect(reaction) {
-    /**
-     * Emitted whenever a reaction is collected.
-     * @event ReactionCollector#collect
-     * @param {MessageReaction} reaction The reaction that was collected
-     * @param {User} user The user that added the reaction
-     */
     if (reaction.message.id !== this.message.id) return null;
-    return ReactionCollector.key(reaction);
+    return {
+      key: ReactionCollector.key(reaction),
+      value: reaction,
+    };
   }
 
   /**
    * Handles a reaction deletion for possible disposal.
-   * @param {MessageReaction} reaction The reaction to possibly dispose of
-   * @param {User} user The user that removed the reaction
+   * @param {MessageReaction} reaction The reaction to possibly dispose
    * @returns {?Snowflake|string}
    */
-  dispose(reaction, user) {
-    /**
-     * Emitted whenever a reaction is disposed of.
-     * @event ReactionCollector#dispose
-     * @param {MessageReaction} reaction The reaction that was disposed of
-     * @param {User} user The user that removed the reaction
-     */
+  dispose(reaction) {
     if (reaction.message.id !== this.message.id) return null;
 
     /**
@@ -101,11 +91,8 @@ class ReactionCollector extends Collector {
      * is removed.
      * @event ReactionCollector#remove
      * @param {MessageReaction} reaction The reaction that was removed
-     * @param {User} user The user that removed the reaction
      */
-    if (this.collected.has(ReactionCollector.key(reaction))) {
-      this.emit('remove', reaction, user);
-    }
+    if (this.collected.has(reaction)) this.emit('remove', reaction);
     return reaction.count ? null : ReactionCollector.key(reaction);
   }
 
