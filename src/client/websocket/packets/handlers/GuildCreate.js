@@ -15,7 +15,7 @@ class GuildCreateHandler extends AbstractHandler {
       }
     } else {
       // A new guild
-      guild = client.guilds.add(data);
+      guild = client.guilds.create(data);
       const emitEvent = client.ws.connection.status === Status.READY;
       if (emitEvent) {
         /**

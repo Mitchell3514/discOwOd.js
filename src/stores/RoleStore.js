@@ -1,7 +1,5 @@
 const DataStore = require('./DataStore');
 const Role = require('../structures/Role');
-const { resolveColor } = require('../util/Util');
-const { resolve } = require('../util/Permissions');
 
 /**
  * Stores roles.
@@ -14,44 +12,8 @@ class RoleStore extends DataStore {
     this.guild = guild;
   }
 
-  add(data, cache) {
-    return super.add(data, cache, { extras: [this.guild] });
-  }
-
-  /**
-   * Creates a new role in the guild with given information.
-   * <warn>The position will silently reset to 1 if an invalid one is provided, or none.</warn>
-   * @param {RoleData} [data] The data to update the role with
-   * @param {string} [reason] Reason for creating this role
-   * @returns {Promise<Role>}
-   * @example
-   * // Create a new role
-   * guild.roles.create()
-   *   .then(console.log)
-   *   .catch(console.error);
-   * @example
-   * // Create a new role with data and a reason
-   * guild.roles.create({
-   *     name: 'Super Cool People',
-   *     color: 'BLUE'
-   *   },
-   *   reason: 'we needed a role for Super Cool People',
-   * })
-   *   .then(console.log)
-   *   .catch(console.error);
-   */
-  create(data = {}, reason) {
-    if (data.color) data.color = resolveColor(data.color);
-    if (data.permissions) data.permissions = resolve(data.permissions);
-
-    return this.guild.client.api.guilds(this.guild.id).roles.post({ data, reason }).then(r => {
-      const { role } = this.client.actions.GuildRoleCreate.handle({
-        guild_id: this.guild.id,
-        role: r,
-      });
-      if (data.position) return role.setPosition(data.position, reason);
-      return role;
-    });
+  create(data, cache) {
+    return super.create(data, cache, { extras: [this.guild] });
   }
 
   /**
