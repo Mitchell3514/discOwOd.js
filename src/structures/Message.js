@@ -377,10 +377,10 @@ class Message extends Base {
     }
     if (!options.content) options.content = content;
 
-    const { data } = await createMessage(this, options);
+    const { data, files } = await createMessage(this, options);
 
     return this.client.api.channels[this.channel.id].messages[this.id]
-      .patch({ data })
+      .patch({ data, files })
       .then(d => {
         const clone = this._clone();
         clone._patch(d);
