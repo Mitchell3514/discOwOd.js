@@ -22,7 +22,7 @@ class GuildMember extends Base {
     this.guild = guild;
 
     /**
-     * The user that this guild member instance Represents
+     * The user that this guild member instance represents
      * @type {User}
      */
     this.user = {};
