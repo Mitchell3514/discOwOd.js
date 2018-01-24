@@ -16,6 +16,12 @@ class GuildEmoji extends Emoji {
      * @type {Guild}
      */
     this.guild = guild;
+    
+    /**
+     * The user that created this emoji
+     * @type {User}
+     */
+    this.user = {};
 
     this._patch(data);
   }
@@ -34,6 +40,8 @@ class GuildEmoji extends Emoji {
      * @type {boolean}
      */
     this.managed = data.managed;
+    
+    if (data.user) this.user = this.guild.client.users.add(data.user);
 
     this._roles = data.roles;
   }
