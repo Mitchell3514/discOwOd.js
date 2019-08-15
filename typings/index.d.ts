@@ -1635,6 +1635,7 @@ declare module 'discord.js' {
 
 		public on(event: WSEventType, listener: (data: any, shardID: number) => void): this;
 		public once(event: WSEventType, listener: (data: any, shardID: number) => void): this;
+
 		private debug(message: string, shard?: WebSocketShard): void;
 		private connect(): Promise<void>;
 		private createShards(): Promise<void>;
@@ -1642,8 +1643,8 @@ declare module 'discord.js' {
 		private broadcast(packet: object): void;
 		private destroy(): void;
 		private _handleSessionLimit(remaining?: number, resetAfter?: number): Promise<void>;
-		private handlePacket(packet?: object, shard?: WebSocketShard): Promise<boolean>;
-		private checkShardsReady(): void;
+		private handlePacket(packet?: object, shard?: WebSocketShard): boolean;
+		private checkShardsReady(): Promise<void>;
 		private triggerClientReady(): void;
 	}
 
@@ -1658,12 +1659,13 @@ declare module 'discord.js' {
 		private connection: WebSocket | null;
 		private helloTimeout: NodeJS.Timeout | null;
 		private eventsAttached: boolean;
+		private expectedGuilds: Set<Snowflake>;
+		private readyTimeout: NodeJS.Timeout | null;
 
 		public manager: WebSocketManager;
 		public id: number;
 		public status: Status;
-		public pings: [number, number, number];
-		public readonly ping: number;
+		public ping: number;
 
 		private debug(message: string): void;
 		private connect(): Promise<void>;
@@ -1672,6 +1674,7 @@ declare module 'discord.js' {
 		private onError(error: ErrorEvent | object): void;
 		private onClose(event: CloseEvent): void;
 		private onPacket(packet: object): void;
+		private checkReady(): void;
 		private setHelloTimeout(time?: number): void;
 		private setHeartbeatTimer(time: number): void;
 		private sendHeartbeat(): void;
