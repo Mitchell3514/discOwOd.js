@@ -204,7 +204,7 @@ class WebSocketShard extends EventEmitter {
       this.once(ShardEvents.INVALID_SESSION, onInvalid);
 
       if (this.connection && this.connection.readyState === WebSocket.OPEN) {
-        this.identifyNew();
+        this.identify();
         return;
       }
 
@@ -656,6 +656,7 @@ class WebSocketShard extends EventEmitter {
     this.connection = null;
     // Set the shard status
     this.status = Status.DISCONNECTED;
+    this.closeSequence = this.sequence;
     // Reset the sequence
     this.sequence = -1;
     // Reset the ratelimit data
