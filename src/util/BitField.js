@@ -1,7 +1,6 @@
 'use strict';
 
 const { RangeError } = require('../errors');
-const Permissions = require('./Permissions');
 
 
 /**
@@ -137,7 +136,8 @@ class BitField {
    */
   static resolve(bit = 0) {
     if (typeof bit === 'number' && bit >= 0) return bit;
-    if (bit instanceof BitField || bit instanceof Permissions) return bit.bitfield;
+    if (bit instanceof BitField) return bit.bitfield;
+    if (typeof bit === 'object' && bit.hasOwnProperty('bitfield')) return bit.bitfield;
     if (Array.isArray(bit)) return bit.map(p => this.resolve(p)).reduce((prev, p) => prev | p, 0);
     if (typeof bit === 'string') return this.FLAGS[bit];
     throw new RangeError('BITFIELD_INVALID');
