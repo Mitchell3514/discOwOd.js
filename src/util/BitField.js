@@ -2,7 +2,6 @@
 
 const { RangeError } = require('../errors');
 
-
 /**
  * Data structure that makes it easy to interact with a bitfield.
  */
